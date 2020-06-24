@@ -1,0 +1,11 @@
+tensorflow-gpu==1.15.0
+Cython
+contextlib2
+pillow
+lxml
+jupyter
+matplotlib
+tf_slim
+pycocotools
+pandas
+numpy
