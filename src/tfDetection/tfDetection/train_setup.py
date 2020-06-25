@@ -17,6 +17,7 @@ Created on: 2020/06/23
 import argparse
 import glob
 import os
+import tarfile
 import xml.etree.ElementTree as ET
 from collections import namedtuple
 from collections import OrderedDict
@@ -33,9 +34,6 @@ import pandas as pd
 # DL Frameworks
 import tensorflow as tf
 
-# Utilities
-import logging
-
 # Custom Packages
 from IPython.display import display
 from lxml import html
@@ -43,6 +41,7 @@ from object_detection.utils import dataset_util
 from object_detection.utils import label_map_util
 from PIL import Image
 from tfDetection import utils
+from tfDetection.logging_config import logger as logging
 
 
 # =====================================MAIN=============================================
@@ -99,9 +98,9 @@ def make_traintest_csv(cfg):
         logging.error("output_dir is not defined")
         return
     utils.makedir(output_dir)
-    print(f"Making {output_dir}/train_labels.csv")
+    logging.info(f"Making {output_dir}/train_labels.csv")
     df_train.to_csv(train_csvpath, index=None)
-    print(f"Making {output_dir}/test_labels.csv")
+    logging.info(f"Making {output_dir}/test_labels.csv")
     df_test.to_csv(test_csvpath, index=None)
 
 
@@ -197,25 +196,33 @@ def make_tfrecord(cfg):
             writer.write(tf_example.SerializeToString())
 
         writer.close()
-        print(f"Successfully created the TFRecords: {output_path}")
+        logging.info(f"Successfully created the TFRecords: {output_path}")
 
 
 def download_pretrained_model(cfg):
     url = cfg["model_zoo_url"]
+    pretrained_model = cfg["pretrained_model"]
     page = requests.get(url)
     webpage = html.fromstring(page.content)
-    results = webpage.xpath("//a/@href")
-    results = list(filter(lambda x: "download.tensorflow.org" in x, results))
+    url_list = webpage.xpath("//a/@href")
+    url_list = list(
+        filter(lambda x: "download.tensorflow.org" and "tar.gz" in x, url_list)
+    )
     pretrained_url = None
-    for r in results:
-        if cfg["pretrain_model"] in r:
-            pretrained_url = r
+    for url in url_list:
+        if pretrained_model in url:
+            pretrained_url = url
             break
     if pretrained_url is not None:
-        
-
-list_pretrained_model(None)
-#%%
+        utils.download_url(pretrained_url, cfg["pretrained_filepath"])
+        model_tarfile = os.path.basename(cfg['pretrained_filepath'])
+        logging.info(f'Extracting {model_tarfile}')
+        with tarfile.open(cfg["pretrained_filepath"]) as fid:
+            fid.extractall(cfg["training_dir"])
+        logging.info(f'Removing {model_tarfile}')
+        os.remove(cfg['pretrained_filepath'])
+    else:
+        logging.info(f"{pretrained_url} is not available for downloading")
 
 
 def get_args_parser():
@@ -245,6 +252,7 @@ def main(args):
         cfg = json.load(fid)
     cfg["project_dir"] = os.path.dirname(cfg["image_dir"])
     cfg["dataset_dir"] = os.path.join(cfg["project_dir"], "datasets")
+    cfg["training_dir"] = os.path.join(cfg["project_dir"], "training")
     cfg["label_map"] = os.path.join(cfg["dataset_dir"], "label_map.pbtxt")
     cfg["train_csvpath"] = os.path.join(cfg["dataset_dir"], "train_labels.csv")
     cfg["test_csvpath"] = os.path.join(cfg["dataset_dir"], "test_labels.csv")
@@ -255,13 +263,16 @@ def main(args):
     cfg[
         "model_zoo_url"
     ] = "https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md"
+    cfg["pretrained_filepath"] = os.path.join(
+        cfg["training_dir"], f"{cfg['pretrained_model']}.tar.gz"
+    )
+    # make_label_map(cfg)
+    # make_traintest_csv(cfg)
+    # make_tfrecord(cfg)
+    download_pretrained_model(cfg)
 
-    make_label_map(cfg)
-    make_traintest_csv(cfg)
-    make_tfrecord(cfg)
 
-
-# main(None)
+main(None)
 #%%
 # =====================================DEBUG=========================================
 

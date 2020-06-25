@@ -8,7 +8,7 @@ Author: PhatLuu
 Contact: tpluu2207@gmail.com
 Created on: 2020/06/25
 """
-
+#%%
 # ================================IMPORT PACKAGES====================================
 
 # Standard Packages
@@ -19,9 +19,13 @@ import sys
 # FileIO Packages
 import csv
 import json
+import requests
 
 # Utilities
-import logging
+from tqdm import tqdm
+
+# Custom Packages
+from tfDetection.logging_config import logger as logging
 
 
 # =====================================MAIN==========================================
@@ -65,14 +69,25 @@ def save_json(json_data, json_filepath):
         json.dump(json_data, fid)
 
 
-def download_tar(url, output_dir):
-    with requests.get(url,stream = True) as File:
-        with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
-            with open(tmp_file.name,'wb') as fd:
-                for chunk in File.iter_content(chunk_size=128):
-                    fd.write(chunk)
-    
-    
+def download_url(url, to_file, **kwargs):
+    if os.path.exists(to_file):
+        logging.info("File exists: {}. Skip downloading".format(to_file))
+        return
+    logging.info("Downloading to: {}".format(to_file))
+    makedir(os.path.dirname(to_file))
+    r = requests.get(url, stream=True)
+    # Total size in bytes.
+    total_size = int(r.headers.get("content-length", 0))
+    block_size = 1024  # 1 Kibibyte
+    t = tqdm(total=total_size, unit="iB", unit_scale=True)
+    with open(to_file, "wb") as fid:
+        for data in r.iter_content(block_size):
+            t.update(len(data))
+            fid.write(data)
+    t.close()
+    logging.info("\n")
+
+
 def main(**kwargs):
     pass
 

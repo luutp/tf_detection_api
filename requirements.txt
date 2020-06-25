@@ -10,3 +10,4 @@ pycocotools
 pandas
 numpy
 requests
+tqdm
