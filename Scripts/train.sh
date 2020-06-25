@@ -15,16 +15,6 @@ echo $PWD
 echo "Add PYTHONPATH"
 export PYTHONPATH=$PYTHONPATH:`pwd`:`pwd`/slim
 
-mkdir $WORKSPACE_FOLDER/ckpts
-cd $WORKSPACE_FOLDER/ckpts
-
-if [ ! -d $WORKSPACE_FOLDER/ckpts/$MODEL_NAME ]; then    
-    echo "Download pretraind model"
-    wget -O $MODEL_NAME.tar.gz $MODEL_URL
-    tar xvzf $MODEL_NAME.tar.gz
-    rm $MODEL_NAME.tar.gz
-fi
-
 cd $HOME/gitClone/models/research
 
 if [ "$1" == "" ]; then

@@ -17,6 +17,7 @@ Created on: 2020/06/23
 import argparse
 import glob
 import os
+import subprocess
 import tarfile
 import xml.etree.ElementTree as ET
 from collections import namedtuple
@@ -215,14 +216,43 @@ def download_pretrained_model(cfg):
             break
     if pretrained_url is not None:
         utils.download_url(pretrained_url, cfg["pretrained_filepath"])
-        model_tarfile = os.path.basename(cfg['pretrained_filepath'])
-        logging.info(f'Extracting {model_tarfile}')
+        model_tarfile = os.path.basename(cfg["pretrained_filepath"])
+        logging.info(f"Extracting {model_tarfile}")
         with tarfile.open(cfg["pretrained_filepath"]) as fid:
             fid.extractall(cfg["training_dir"])
-        logging.info(f'Removing {model_tarfile}')
-        os.remove(cfg['pretrained_filepath'])
+        logging.info(f"Removing {model_tarfile}")
+        os.remove(cfg["pretrained_filepath"])
     else:
         logging.info(f"{pretrained_url} is not available for downloading")
+
+
+def make_pipeline_config_file(cfg):
+    root_dir = cfg["training_dir"]
+    ext = ".config"
+    config_filepath = ""
+    for path, subdirs, files in os.walk(root_dir):
+        for filename in files:
+            name, this_ext = os.path.splitext(filename)
+            if this_ext == ext:
+                config_filepath = os.path.join(path, filename)
+    model_ckpt = os.path.join(os.path.dirname(config_filepath), "model.ckpt")
+    file_contents = []
+    with open(config_filepath, "r") as fid:
+        for line in fid:
+            if "model.ckpt" in line:
+                line = f'\tfine_tune_checkpoint: "{model_ckpt}"\n'
+            if "label_map.pbtxt" in line:
+                line = f'\tlabel_map_path: "{cfg["label_map"]}"\n'
+            if "train.record" in line:
+                line = f'\t\tinput_path: "{cfg["train_record"]}"\n'
+            if "val.record" in line:
+                line = f'\t\tinput_path: "{cfg["test_record"]}"\n'
+
+            file_contents.append(line)
+    with open(cfg["pipeline_config_filepath"], "w") as fid:
+        for line in file_contents:
+            fid.write(line)
+    logging.info(f"DONE: {cfg['pipeline_config_filepath']} has been created")
 
 
 def get_args_parser():
@@ -266,10 +296,17 @@ def main(args):
     cfg["pretrained_filepath"] = os.path.join(
         cfg["training_dir"], f"{cfg['pretrained_model']}.tar.gz"
     )
+    cfg["pipeline_config_filepath"] = os.path.join(
+        cfg["training_dir"], "training_pipeline.config"
+    )
     # make_label_map(cfg)
     # make_traintest_csv(cfg)
     # make_tfrecord(cfg)
-    download_pretrained_model(cfg)
+    # download_pretrained_model(cfg)
+    # make_pipeline_config_file(cfg)
+    bash_cmd = "echo hello"
+    results = subprocess.run(bash_cmd, shell=True, universal_newlines=True, check=True)
+    print(results.stdout)
 
 
 main(None)
