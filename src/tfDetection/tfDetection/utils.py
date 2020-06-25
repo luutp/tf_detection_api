@@ -65,6 +65,14 @@ def save_json(json_data, json_filepath):
         json.dump(json_data, fid)
 
 
+def download_tar(url, output_dir):
+    with requests.get(url,stream = True) as File:
+        with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
+            with open(tmp_file.name,'wb') as fd:
+                for chunk in File.iter_content(chunk_size=128):
+                    fd.write(chunk)
+    
+    
 def main(**kwargs):
     pass
 

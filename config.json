@@ -2,5 +2,6 @@
     "image_dir": "/home/phatluu/tf_detection_api/images",
     "anno_dir": "/home/phatluu/tf_detection_api/annotations",
     "id":[1],
-    "name":["raccoon"]
+    "name":["raccoon"],
+    "pretrained_model": "ssd_mobilenet_v1_coco"
 }
