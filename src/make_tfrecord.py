@@ -9,10 +9,10 @@ Contact: tpluu2207@gmail.com
 Created on: 2020/06/23
 """
 
-# ================================IMPORT PACKAGES====================================
-#%%
 
 # Standard Packages
+# ================================IMPORT PACKAGES=====================================
+#%%
 import argparse
 import glob
 import os
@@ -37,6 +37,10 @@ import logging
 from IPython.display import display
 from object_detection.utils import dataset_util
 from PIL import Image
+from tfDetection.config import config
+from tfDetection import utils
+
+# =====================================MAIN=============================================
 
 
 def xml_to_df(path):
@@ -83,8 +87,7 @@ def make_traintest_csv(df, train_ratio=0.75, output_dir=None):
     if output_dir is None:
         logging.error("output_dir is not defined")
         return
-    if not os.path.isdir(output_dir):
-        os.mkdir(output_dir)
+    utils.makedir(output_dir)
     print(f"Making {output_dir}/train_labels.csv")
     df_train.to_csv(os.path.join(output_dir, "train_labels.csv"), index=None)
     print(f"Making {output_dir}/test_labels.csv")
