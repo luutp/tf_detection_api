@@ -1,16 +1,47 @@
 #!/bin/bash
 # DEFINES
-#!/bin/bash
-# DEFINES
 WORKSPACE_FOLDER="$( cd "$( dirname "${BASH_SOURCE[0]}")/.." >/dev/null 2>&1 && pwd )"
-# Get project name from path (basename)
 PROJECT_NAME="${PWD##*/}"
 PIP_REQUIREMENTS=$WORKSPACE_FOLDER/requirements.txt
-CONDA_ENV=tf1
-INSTALLATION=false
+CONDA_ENV=tf15
+INSTALLATION=true
 CONFIG_FILEPATH=$WORKSPACE_FOLDER/config.json
+
+# Display help message
+USAGE="$(basename "$0") [--install] [--config_file str] [--env str]
+
+Implement tensorflow (tf-gpu 1.15.0) Object Detection API on custom Dataset.
+
+Requirements: Anaconda3, python 3.7
+
+Args:
+    -h|--help           Show this help message
+    --install           Install conda env, pip requirements, and tf models API.
+    --config_file  str  Path to config file.
+                        Default: $CONFIG_FILEPATH
+    --env          str  Conda environment name.
+                        Default: $CONDA_ENV
+    "
+
+# Arguments parser
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        -h|--help) show_help=true ;;
+        --install) INSTALLATION=true ;;
+        --config_file) CONFIG_FILEPATH="$2"; shift ;;
+        --env) CONDA_ENV="$2"; shift ;;
+        *) echo "Unknown argument: $1"; exit 1 ;;
+    esac
+    shift
+done
+
+if [[ $show_help == true ]]; then
+    echo "$USAGE"
+    exit
+fi
+
 # ======================================================================================
-if [ $INSTALLATION == true ]; then
+if [[ $INSTALLATION == true ]]; then
     echo "Installing tensorflow object detection API"
     # Create Conda environment
     if [ ! -d $HOME/anaconda3/envs/$CONDA_ENV  ]; then
