@@ -38,6 +38,7 @@ from lxml import html
 from object_detection.utils import dataset_util
 from object_detection.utils import label_map_util
 from PIL import Image
+from pyfiglet import Figlet
 from tfDetection import utils
 from tfDetection.logging_config import logger as logging
 from tfDetection.utils import printit
@@ -263,7 +264,7 @@ def make_train_bash_file(cfg):
     with open(cfg["train_bash_filepath"], "w") as fid:
         fid.write(f"PIPELINE_CONFIG_PATH={cfg['pipeline_config_filepath']} \n")
         fid.write(f"MODEL_DIR={cfg['ckpts_dir']} \n")
-        fid.write(f"NUM_TRAIN_STEPS=50000 \n")
+        fid.write(f"NUM_TRAIN_STEPS=10000 \n")
         fid.write(f"SAMPLE_1_OF_N_EVAL_EXAMPLES=1 \n")
         fid.write(f"python object_detection/model_main.py \\\n")
         fid.write("\t--pipeline_config_path=${PIPELINE_CONFIG_PATH} \\\n")
@@ -324,8 +325,8 @@ def main(args):
     make_train_bash_file(cfg)
 
 
-# =====================================DEBUG=========================================
-
 if __name__ == "__main__":
     args = get_args_parser().parse_args()
-    main(args)
+    f = Figlet(font="slant")
+    print(f.renderText("TF - Detection"))
+    # main(args)
