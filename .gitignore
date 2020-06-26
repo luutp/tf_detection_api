@@ -123,7 +123,7 @@ ENV/
 # Checkpoint model
 *.ckpt*
 ckpts/
-setup.cfg
 training/
 datasets/
 .vscode/
+setup.cfg

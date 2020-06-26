@@ -17,14 +17,15 @@ import argparse
 import glob
 import os
 import subprocess
-import tarfile
-import xml.etree.ElementTree as ET
 from collections import namedtuple
 
 # FileIO Packages
 import io
 import json
 import requests
+import tarfile
+import xml.etree.ElementTree as ET
+from lxml import html
 
 # Data Analytics
 import numpy as np
@@ -32,13 +33,16 @@ import pandas as pd
 
 # DL Frameworks
 import tensorflow as tf
-
-# Custom Packages
-from lxml import html
 from object_detection.utils import dataset_util
 from object_detection.utils import label_map_util
+
+# Visualization Packages
 from PIL import Image
+
+# Utilities
 from pyfiglet import Figlet
+
+# Custom Packages
 from tfDetection import utils
 from tfDetection.logging_config import logger as logging
 from tfDetection.utils import printit
@@ -288,10 +292,6 @@ def get_args_parser():
 
 
 def main(args):
-    # config_filepath = os.path.join(
-    #     os.path.expanduser("~"), "tf_detection_api/config.json"
-    # )
-    # train_ratio = 0.75
     config_filepath = args.config_filepath
     cfg = dict()
     with open(config_filepath, "r") as fid:

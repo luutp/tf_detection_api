@@ -3,8 +3,8 @@
 WORKSPACE_FOLDER="$( cd "$( dirname "${BASH_SOURCE[0]}")/.." >/dev/null 2>&1 && pwd )"
 PROJECT_NAME="${PWD##*/}"
 PIP_REQUIREMENTS=$WORKSPACE_FOLDER/requirements.txt
-CONDA_ENV=tf15
-INSTALLATION=true
+CONDA_ENV=tf1
+INSTALLATION=false
 CONFIG_FILEPATH=$WORKSPACE_FOLDER/config.json
 
 # Display help message
