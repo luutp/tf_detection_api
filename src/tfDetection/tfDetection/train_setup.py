@@ -329,4 +329,4 @@ if __name__ == "__main__":
     args = get_args_parser().parse_args()
     f = Figlet(font="slant")
     print(f.renderText("TF - Detection"))
-    # main(args)
+    main(args)
