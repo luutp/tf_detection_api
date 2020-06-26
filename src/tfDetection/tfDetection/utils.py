@@ -12,12 +12,11 @@ Created on: 2020/06/25
 # ================================IMPORT PACKAGES====================================
 
 # Standard Packages
+import functools
 import os
 import shutil
-import sys
 
 # FileIO Packages
-import csv
 import json
 import requests
 
@@ -31,6 +30,19 @@ from tfDetection.logging_config import logger as logging
 # =====================================MAIN==========================================
 
 
+def printit(method):
+    @functools.wraps(method)
+    def inner(*args, **kwargs):
+        func_name = method.__name__
+        logging.info(f"START: {func_name}.")
+        result = method(*args, **kwargs)
+        logging.info(f"DONE: {func_name}")
+        return result
+
+    return inner
+
+
+@printit
 def makedir(inputDir, remove=False):
     """Summary:
     --------
@@ -54,6 +66,7 @@ def makedir(inputDir, remove=False):
         )
 
 
+@printit
 def load_json(json_filepath):
     output = None
     if not os.path.isfile(json_filepath):
@@ -64,6 +77,7 @@ def load_json(json_filepath):
     return output
 
 
+@printit
 def save_json(json_data, json_filepath):
     with open(json_filepath, "w") as fid:
         json.dump(json_data, fid)

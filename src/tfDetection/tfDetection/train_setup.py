@@ -10,7 +10,6 @@ Created on: 2020/06/23
 """
 #%%
 
-
 # ================================IMPORT PACKAGES=====================================
 
 # Standard Packages
@@ -21,7 +20,6 @@ import subprocess
 import tarfile
 import xml.etree.ElementTree as ET
 from collections import namedtuple
-from collections import OrderedDict
 
 # FileIO Packages
 import io
@@ -36,13 +34,13 @@ import pandas as pd
 import tensorflow as tf
 
 # Custom Packages
-from IPython.display import display
 from lxml import html
 from object_detection.utils import dataset_util
 from object_detection.utils import label_map_util
 from PIL import Image
 from tfDetection import utils
 from tfDetection.logging_config import logger as logging
+from tfDetection.utils import printit
 
 
 # =====================================MAIN=============================================
@@ -79,6 +77,7 @@ def xml_to_df(path):
     return df
 
 
+@printit
 def make_traintest_csv(cfg):
     df = xml_to_df(cfg["anno_dir"])
     train_ratio = cfg["train_ratio"]
@@ -105,6 +104,7 @@ def make_traintest_csv(cfg):
     df_test.to_csv(test_csvpath, index=None)
 
 
+@printit
 def make_label_map(cfg):
     id_list = cfg["id"]  # id starts with 1
     name_list = cfg["name"]
@@ -182,6 +182,7 @@ def create_tf_example(label_map_filepath, group, path):
     return tf_example
 
 
+@printit
 def make_tfrecord(cfg):
     image_dir = cfg["image_dir"]
     for output_path, csv_input in zip(
@@ -200,6 +201,7 @@ def make_tfrecord(cfg):
         logging.info(f"Successfully created the TFRecords: {output_path}")
 
 
+@printit
 def download_pretrained_model(cfg):
     url = cfg["model_zoo_url"]
     pretrained_model = cfg["pretrained_model"]
@@ -226,6 +228,7 @@ def download_pretrained_model(cfg):
         logging.info(f"{pretrained_url} is not available for downloading")
 
 
+@printit
 def make_pipeline_config_file(cfg):
     root_dir = cfg["training_dir"]
     ext = ".config"
@@ -252,9 +255,25 @@ def make_pipeline_config_file(cfg):
     with open(cfg["pipeline_config_filepath"], "w") as fid:
         for line in file_contents:
             fid.write(line)
-    logging.info(f"DONE: {cfg['pipeline_config_filepath']} has been created")
+    logging.info(f"{cfg['pipeline_config_filepath']} has been created")
 
 
+@printit
+def make_train_bash_file(cfg):
+    with open(cfg["train_bash_filepath"], "w") as fid:
+        fid.write(f"PIPELINE_CONFIG_PATH={cfg['pipeline_config_filepath']} \n")
+        fid.write(f"MODEL_DIR={cfg['ckpts_dir']} \n")
+        fid.write(f"NUM_TRAIN_STEPS=50000 \n")
+        fid.write(f"SAMPLE_1_OF_N_EVAL_EXAMPLES=1 \n")
+        fid.write(f"python object_detection/model_main.py \\\n")
+        fid.write("\t--pipeline_config_path=${PIPELINE_CONFIG_PATH} \\\n")
+        fid.write("\t--model_dir=${MODEL_DIR} \\\n")
+        fid.write("\t--num_train_steps=${NUM_TRAIN_STEPS} \\\n")
+        fid.write("\t--sample_1_of_n_eval_examples=$SAMPLE_1_OF_N_EVAL_EXAMPLES \\\n")
+        fid.write("\t--alsologtostderr \\\n")
+
+
+# =====================================MAIN=============================================
 def get_args_parser():
     parser = argparse.ArgumentParser(
         prog=os.path.basename(os.path.abspath(__file__)),
@@ -262,21 +281,17 @@ def get_args_parser():
         epilog="Additional Info",
     )
     parser.add_argument(
-        "--config_file", type=str, required=True, help="full path to cfg file"
-    )
-    parser.add_argument(
-        "--train_ratio", type=float, default=0.75, help="Train samples ratio"
+        "--config_filepath", type=str, required=True, help="full path to cfg file"
     )
     return parser
 
 
 def main(args):
-    # config_filepath = args.config_filepath
-    # train_ratio = args.train_ratio
-    config_filepath = os.path.join(
-        os.path.expanduser("~"), "tf_detection_api/config.json"
-    )
-    train_ratio = 0.75
+    # config_filepath = os.path.join(
+    #     os.path.expanduser("~"), "tf_detection_api/config.json"
+    # )
+    # train_ratio = 0.75
+    config_filepath = args.config_filepath
     cfg = dict()
     with open(config_filepath, "r") as fid:
         cfg = json.load(fid)
@@ -289,7 +304,6 @@ def main(args):
     cfg["train_record"] = os.path.join(cfg["dataset_dir"], "train.record")
     cfg["test_record"] = os.path.join(cfg["dataset_dir"], "test.record")
     cfg["config_filepath"] = config_filepath
-    cfg["train_ratio"] = train_ratio
     cfg[
         "model_zoo_url"
     ] = "https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md"
@@ -299,18 +313,17 @@ def main(args):
     cfg["pipeline_config_filepath"] = os.path.join(
         cfg["training_dir"], "training_pipeline.config"
     )
-    # make_label_map(cfg)
-    # make_traintest_csv(cfg)
-    # make_tfrecord(cfg)
-    # download_pretrained_model(cfg)
-    # make_pipeline_config_file(cfg)
-    bash_cmd = "echo hello"
-    results = subprocess.run(bash_cmd, shell=True, universal_newlines=True, check=True)
-    print(results.stdout)
+    cfg["train_bash_filepath"] = os.path.join(cfg["project_dir"], "Scripts/train.sh")
+    cfg["ckpts_dir"] = os.path.join(cfg["project_dir"], "ckpts")
+
+    make_label_map(cfg)
+    make_traintest_csv(cfg)
+    make_tfrecord(cfg)
+    download_pretrained_model(cfg)
+    make_pipeline_config_file(cfg)
+    make_train_bash_file(cfg)
 
 
-main(None)
-#%%
 # =====================================DEBUG=========================================
 
 if __name__ == "__main__":

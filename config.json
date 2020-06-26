@@ -3,5 +3,6 @@
     "anno_dir": "/home/phatluu/tf_detection_api/annotations",
     "id":[1],
     "name":["raccoon"],
-    "pretrained_model": "ssd_mobilenet_v1_coco"
+    "pretrained_model": "ssd_mobilenet_v1_coco",
+    "train_ratio":0.75
 }
