@@ -129,7 +129,8 @@ def main(args):
     model = tf.compat.v2.saved_model.load(str(model_dir))
     model = model.signatures["serving_default"]
 
-    test_image = os.path.join(cfg["image_dir"], "raccoon-130.jpg")
+    # test_image = os.path.join(cfg["image_dir"], "raccoon-130.jpg")
+    test_image=os.path.join(os.path.expanduser('~'),'Downloads/200626_images/pomeranian/7fd430066f.jpg')
 
     show_inference(model, test_image, category_index)
 

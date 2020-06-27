@@ -127,3 +127,4 @@ training/
 datasets/
 .vscode/
 setup.cfg
+src/tfDetection/tfDetection/download_images.py

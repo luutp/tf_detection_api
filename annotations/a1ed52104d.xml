@@ -1,0 +1,26 @@
+<annotation>
+	<folder>images</folder>
+	<filename>a1ed52104d.jpg</filename>
+	<path>/media/phatluu/Ubuntu_D/google_images/cat_and_dog/images/a1ed52104d.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>590</width>
+		<height>393</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>dog</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>208</xmin>
+			<ymin>84</ymin>
+			<xmax>355</xmax>
+			<ymax>364</ymax>
+		</bndbox>
+	</object>
+</annotation>
