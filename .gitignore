@@ -105,7 +105,6 @@ ENV/
 # .vscode/
 
 # media files
-*.jpg
 *.gif
 *.pdf
 *.mp4
