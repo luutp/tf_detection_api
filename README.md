@@ -2,6 +2,7 @@
 
 ![cat and dog](.github/images/906d17abcd.jpg "cat and dog")
 
+## This Readme.md file is still under development. More details will be added soon.
 ## Requirements: 
 <ul> 
     <li> Anaconda3 </li>
