@@ -13,16 +13,19 @@ Created on: 2020/06/23
 
 # Standard Packages
 import argparse
-import os
 
 # FileIO Packages
 import json
+import os
 
 # Data Analytics
 import numpy as np
 
 # DL Frameworks
 import tensorflow as tf
+
+# Custom Packages
+from IPython.display import display
 from object_detection.utils import label_map_util
 from object_detection.utils import ops as utils_ops
 from object_detection.utils import visualization_utils as vis_util
@@ -30,10 +33,7 @@ from object_detection.utils import visualization_utils as vis_util
 # Visualization Packages
 from PIL import Image
 
-# Custom Packages
-from IPython.display import display
 from tfDetection.logging_config import logger as logging
-
 
 tf.compat.v1.enable_eager_execution()
 
@@ -53,7 +53,7 @@ def run_inference_for_single_image(model, image):
     # All outputs are batches tensors.
     # Convert to numpy arrays, and take index [0] to remove the batch dimension.
     # We're only interested in the first num_detections.
-    
+
     num_detections = int(output_dict.pop("num_detections"))
     output_dict = {
         key: value[0, :num_detections].numpy() for key, value in output_dict.items()
@@ -94,7 +94,9 @@ def show_inference(model, image_path, category_index):
         use_normalized_coordinates=True,
         line_thickness=4,
     )
-    display(Image.fromarray(image_np))
+    output_img = Image.fromarray(image_np)
+    display(output_img)
+    return output_img
 
 
 # =====================================MAIN=============================================
@@ -129,10 +131,11 @@ def main(args):
     model = tf.compat.v2.saved_model.load(str(model_dir))
     model = model.signatures["serving_default"]
 
-    # test_image = os.path.join(cfg["image_dir"], "raccoon-130.jpg")
-    test_image=os.path.join(os.path.expanduser('~'),'Downloads/200626_images/pomeranian/7fd430066f.jpg')
+    filename = "906d17abcd.jpg"
+    test_image = os.path.join(cfg["image_dir"], filename)
 
-    show_inference(model, test_image, category_index)
+    output_img = show_inference(model, test_image, category_index)
+    output_img.save(os.path.join(cfg["project_dir"], f".github/images/{filename}"))
 
 
 main(None)

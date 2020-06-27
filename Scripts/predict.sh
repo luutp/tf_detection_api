@@ -14,7 +14,7 @@ export PYTHONPATH=$PYTHONPATH:`pwd`:`pwd`/slim
 echo "Exporting model"
 INPUT_TYPE=image_tensor
 PIPELINE_CONFIG_PATH="$WORKSPACE_FOLDER/training/training_pipeline.config"
-TRAINED_CKPT_PREFIX="$WORKSPACE_FOLDER/ckpts/model.ckpt-4399"
+TRAINED_CKPT_PREFIX="$WORKSPACE_FOLDER/ckpts/model.ckpt-4460"
 EXPORT_DIR="$WORKSPACE_FOLDER/ckpts/deploy"
 mkdir $EXPORT_DIR
 python object_detection/export_inference_graph.py \
