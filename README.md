@@ -52,7 +52,7 @@ Typically, the following steps are required to train on a custom dataset:
     <li> Prepare options and run ```python object_detection/model_main.py``` </li>
 </ol> 
 
-This repos aims to process all of the required steps mentioned above in <span style='background:#ADD8E6; font-weight:bold'>one bash command</span>
+This repos aims to process all of the required steps mentioned above in **one bash command**
 
 ## :heavy_check_mark: Requirements: 
 <ul> 
@@ -95,20 +95,21 @@ The contents of the config .json file is as belows:
     "train_ratio":0.75
 }
 ```
-:black_circle: <span style='color: red; border-style:solid; border-color:#dadfe1;font-style: italic'> image_dir </span>: absolute path to the local directory that contains all of the images (both train and test sets). If you plan to download images from google search, Selenium could be a good choice to automate this process. Detailed isntructions can be found in [[4]](#4)
 
-:black_circle: <span style='color: red; border-style:solid; border-color:#dadfe1;font-style: italic'> anno_dir </span>: absolute path to annotations directory that contains .xml annotaiton files. labelImg is a nice tool to generate the annotation .xml file from input images. Details can be found in [[5]](#5)
+ <code>:black_circle: image_dir</code>: absolute path to the local directory that contains all of the images (both train and test sets). If you plan to download images from google search, Selenium could be a good choice to automate this process. Detailed isntructions can be found in [[4]](#4)
 
-:black_circle: <span style='color: red; border-style:solid; border-color:#dadfe1;font-style: italic'> id </span>: list of category IDs from your custom dataset. :memo: Note that the id starts from 1 because id=0 is used for background as default.
+<code>:black_circle: anno_dir</code>: absolute path to annotations directory that contains .xml annotaiton files. labelImg is a nice tool to generate the annotation .xml file from input images. Details can be found in [[5]](#5)
 
-:black_circle: <span style='color: red; border-style:solid; border-color:#dadfe1;font-style: italic'> name </span>: list of category names from custom dataset
+<code>:black_circle: id</code>: list of category IDs from your custom dataset. :memo: Note that the id starts from 1 because id=0 is used for background as default.
 
-:black_circle: <span style='color: red; border-style:solid; border-color:#dadfe1;font-style: italic'> pretrained_model </span>: pre-trained model name from tensorflow model garden. [Full list of pretrained models](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md)
+<code>:black_circle: name</code>: list of category names from custom dataset
+
+<code>:black_circle: pretrained_model</code>: pre-trained model name from tensorflow model garden. [Full list of pretrained models](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md)
 <p align="center">
 <img src=".github/images/model_zoo.png" width=80% alt="model zoo">
 </p>
 
-:black_circle: <span style='color: red; border-style:solid; border-color:#dadfe1;font-style: italic'> train_ratio </span> Ratio to split train and test sets. Default: 0.75
+<code>:black_circle: train_ratio</code>: Ratio to split train and test sets. Default: 0.75
 
 ---
 ## <a id=ref >:clipboard: References </a>
