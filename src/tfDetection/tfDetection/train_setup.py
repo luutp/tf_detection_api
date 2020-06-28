@@ -247,6 +247,8 @@ def make_pipeline_config_file(cfg):
     file_contents = []
     with open(config_filepath, "r") as fid:
         for line in fid:
+            if "num_classes" in line:
+                line = f'\tnum_classes: {len(cfg["id"])}\n'
             if "model.ckpt" in line:
                 line = f'\tfine_tune_checkpoint: "{model_ckpt}"\n'
             if "label_map.pbtxt" in line:

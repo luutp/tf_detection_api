@@ -20,7 +20,6 @@ Implement Tensorflow Object Detection API on Custom Dataset
 
 ---
 
-
 <p align="center">
 <img src=".github/images/906d17abcd.jpg" width=80% alt="cat and dog">
 </p>
