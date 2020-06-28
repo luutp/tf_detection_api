@@ -96,20 +96,20 @@ The contents of the config .json file is as belows:
 }
 ```
 
- <code>:black_circle: image_dir</code>: absolute path to the local directory that contains all of the images (both train and test sets). If you plan to download images from google search, Selenium could be a good choice to automate this process. Detailed isntructions can be found in [[4]](#4)
+ - <code> image_dir</code>: absolute path to the local directory that contains all of the images (both train and test sets). If you plan to download images from google search, Selenium could be a good choice to automate this process. Detailed isntructions can be found in [[4]](#4)
 
-<code>:black_circle: anno_dir</code>: absolute path to annotations directory that contains .xml annotaiton files. labelImg is a nice tool to generate the annotation .xml file from input images. Details can be found in [[5]](#5)
+- <code> anno_dir</code>: absolute path to annotations directory that contains .xml annotaiton files. labelImg is a nice tool to generate the annotation .xml file from input images. Details can be found in [[5]](#5)
 
-<code>:black_circle: id</code>: list of category IDs from your custom dataset. :memo: Note that the id starts from 1 because id=0 is used for background as default.
+- <code>id</code>: list of category IDs from your custom dataset. :memo: Note that the id starts from 1 because id=0 is used for background as default.
 
-<code>:black_circle: name</code>: list of category names from custom dataset
+- <code>name</code>: list of category names from custom dataset
 
-<code>:black_circle: pretrained_model</code>: pre-trained model name from tensorflow model garden. [Full list of pretrained models](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md)
+- <code>pretrained_model</code>: pre-trained model name from tensorflow model garden. [Full list of pretrained models](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md)
 <p align="center">
 <img src=".github/images/model_zoo.png" width=80% alt="model zoo">
 </p>
 
-<code>:black_circle: train_ratio</code>: Ratio to split train and test sets. Default: 0.75
+- <code>train_ratio</code>: Ratio to split train and test sets. Default: 0.75
 
 ---
 ## <a id=ref >:clipboard: References </a>
