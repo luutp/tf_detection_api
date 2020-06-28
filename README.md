@@ -43,6 +43,7 @@ Typically, the following steps are required to train on a custom dataset:
         <li>Prepares images (.jpg format)</li>
         <li>Make annotations (.xml format) for each image</li>
         <li>Combine annotation .xml files into a .csv file for train and test set</li>
+        <li>Create label map file .pbtxt</li>
         <li>Generate tf records from such datasets</li>
     </ul>
     </li>
@@ -109,89 +110,7 @@ The contents of the config .json file is as belows:
 
 :black_circle: <span style='color: red; border-style:solid; border-color:#dadfe1;font-style: italic'> train_ratio </span> Ratio to split train and test sets. Default: 0.75
 
-
-## :memo: More Details
-
-### Project Files (Original)
-
-``` 
-.
-├── images
-│   ├── 0006fee860.jpg
-│   ├── 002bcc5167.jpg
-│   ├── 0058af494a.jpg
-│   ├── ...
-├── annotations
-│   ├── 0006fee860.xml
-│   ├── 002bcc5167.xml
-│   ├── 0058af494a.xml
-│   └── ...
-├── config.json
-├── requirements.txt
-├── Scripts
-│   ├── main.sh
-│   ├── predict.sh
-├── src
-│   └── tfDetection
-│       ├── setup.py
-│       ├── tfDetection
-│       │   ├── __init__.py
-│       │   ├── logging_config.py
-│       │   ├── predict.py
-│       │   ├── train_setup.py
-│       │   └── utils.py
-
-```
-
-### Installation
-If the option --install in the bash file main.sh is True, the following steps for enviromental setup will be executed
-<ol> 
-    <li> Create conda virtual environment, python3.7. Default name: tf1 </li>
-    <li> Install tensorlfow-gpu==1.15</li>
-    <li> Install required python packages in requirements.txt </li>
-    <li> Clone and install object detection API from
-    <p> https://github.com/tensorflow/models.git  </p> </li>
-    <li> Download and install protobuf from 
-    <p> https://github.com/google/protobuf/releases/download/v3.0.0/protoc-3.0.0-linux-x86_64.zip </p> </li>
-    <li> Install object detection packages</li>
-    
-</ol> 
-
-### Train setup
-
-#### Prepare dataset
-<ol> 
-    <li> label map  </li>
-    <li> train/test csv file </li>
-    <li> train/test tfrecord files </li>
-</ol> 
-
-![Prepare dataset](.github/images/dataset.png)
-
-
-#### Configure training pipeline
-![Configure training Pipeline](.github/images/training.png)
-
-#### Automatically generate train.sh bash file 
-
-``` 
-PIPELINE_CONFIG_PATH={AUTO} 
-MODEL_DIR={AUTO}
-NUM_TRAIN_STEPS=10000 
-SAMPLE_1_OF_N_EVAL_EXAMPLES=1 
-python object_detection/model_main.py \
-	--pipeline_config_path=${PIPELINE_CONFIG_PATH} \
-	--model_dir=${MODEL_DIR} \
-	--num_train_steps=${NUM_TRAIN_STEPS} \
-	--sample_1_of_n_eval_examples=$SAMPLE_1_OF_N_EVAL_EXAMPLES \
-	--alsologtostderr \
-
-```
-
-#### Train model on custom dataset
-
-![ckpts](.github/images/ckpts.png)
-
+---
 ## <a id=ref >:clipboard: References </a>
 <a id="1">[1]</a> 
 Tensorflow model garden installation
