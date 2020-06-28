@@ -3,7 +3,7 @@
 WORKSPACE_FOLDER="$( cd "$( dirname "${BASH_SOURCE[0]}")/.." >/dev/null 2>&1 && pwd )"
 PROJECT_NAME="${PWD##*/}"
 PIP_REQUIREMENTS=$WORKSPACE_FOLDER/requirements.txt
-CONDA_ENV=tf1
+CONDA_ENV=tf1Detection
 INSTALLATION=false
 CONFIG_FILEPATH=$WORKSPACE_FOLDER/config.json
 
@@ -52,7 +52,7 @@ if [[ $INSTALLATION == true ]]; then
     source ~/anaconda3/etc/profile.d/conda.sh
     conda activate $CONDA_ENV
     conda env list
-    conda install tensorflow-gpu==1.15
+    conda install -y tensorflow-gpu==1.15 -n $CONDA_ENV
     # pip install
     echo "Installing PIP requirements"
     /home/$USER/anaconda3/envs/$CONDA_ENV/bin/pip install -r $PIP_REQUIREMENTS
@@ -63,6 +63,10 @@ if [[ $INSTALLATION == true ]]; then
     fi
     echo "cd to $HOME/gitClone"
     cd $HOME/gitClone
+    if [[ -d "models" ]]; then
+        echo "Removing models directory"
+        rm -rf "models"
+    fi
     echo "Cloning from https://github.com/tensorflow/models.git"
     git clone https://github.com/tensorflow/models.git
     echo "cd to $HOME/gitClone/models/research"
@@ -82,6 +86,9 @@ fi
 source ~/anaconda3/etc/profile.d/conda.sh
 conda activate $CONDA_ENV
 conda env list
+# Install tfDetection package
+cd $WORKSPACE_FOLDER/src/tfDetection
+pip install -e .
 cd $HOME/gitClone/models/research
 echo "Add PYTHONPATH"
 export PYTHONPATH=$PYTHONPATH:`pwd`:`pwd`/slim

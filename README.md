@@ -62,7 +62,7 @@ This repos aims to process all of the required steps mentioned above in **one ba
 ## :zap: Usage
 
 ``` 
-bash main.sh --config_file={PATH_TO_CONFIG_FILE}
+bash main.sh --config_file {PATH_TO_CONFIG_FILE} --install
 ```
 
 ### :question: Help
@@ -76,10 +76,11 @@ Requirements: Anaconda3, python 3.7
 Args:
     -h|--help           Show this help message
     --install           Install conda env, pip requirements, and tf models API.
+                        Default: False
     --config_file  str  Path to config file.
                         Default: /tf_detection_api/config.json
     --env          str  Conda environment name.
-                        Default: tf1
+                        Default: tf1Detection
 ```
 
 ## :page_facing_up: Config file
