@@ -226,7 +226,26 @@ def download_pretrained_model(cfg):
         model_tarfile = os.path.basename(cfg["pretrained_filepath"])
         logging.info(f"Extracting {model_tarfile}")
         with tarfile.open(cfg["pretrained_filepath"]) as fid:
-            fid.extractall(cfg["training_dir"])
+            def is_within_directory(directory, target):
+                
+                abs_directory = os.path.abspath(directory)
+                abs_target = os.path.abspath(target)
+            
+                prefix = os.path.commonprefix([abs_directory, abs_target])
+                
+                return prefix == abs_directory
+            
+            def safe_extract(tar, path=".", members=None, *, numeric_owner=False):
+            
+                for member in tar.getmembers():
+                    member_path = os.path.join(path, member.name)
+                    if not is_within_directory(path, member_path):
+                        raise Exception("Attempted Path Traversal in Tar File")
+            
+                tar.extractall(path, members, numeric_owner=numeric_owner) 
+                
+            
+            safe_extract(fid, cfg["training_dir"])
         logging.info(f"Removing {model_tarfile}")
         os.remove(cfg["pretrained_filepath"])
     else:
